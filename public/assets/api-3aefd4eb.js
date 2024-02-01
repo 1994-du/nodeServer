@@ -1,0 +1,1 @@
+import{M as s}from"./index-104000c2.js";let n;n="";function a(o){return new Promise((e,r)=>{s({url:`${n}/tologin`,method:"post",data:o}).then(t=>{e(t)}).catch(t=>{r(t)})})}function c(o){return new Promise((e,r)=>{s({url:`${n}/toregistry`,method:"post",data:o}).then(t=>{e(t)}).catch(t=>{r(t)})})}export{c as a,a as t};

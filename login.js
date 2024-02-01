@@ -1,16 +1,19 @@
-const fs = require('fs')
-var usersData = JSON.parse(fs.readFileSync(require.resolve('./data/login.json'),{encoding:'utf8'}));//所有用户列表
-console.log(usersData,typeof usersData);
-const Login = function(req,res){
-    req.on('data',(data)=>{
-        let param = JSON.parse(data);
-        console.log('参数',param);
-        let filter = usersData.filter(el=>el.username===param.username&&el.password===param.password)
-        console.log('筛选结果',filter);
-        if(filter.length>0){
+const Login = function(req,res,connection){
+    res.writeHead(200,{'content-type':'text/html;charset=UTF8'})
+    let param = req.body;
+    let querySql=`SELECT id,name,account,password,avatar FROM user_info WHERE account=${param.account} AND password=${param.password};`
+    connection.query(querySql,(err,resp,fields)=>{
+        if(err) throw err;
+        let result = JSON.parse(JSON.stringify(resp));
+        if(result.length>0){
             res.end(JSON.stringify({
                 msg:"登录成功",
-                status:'success'
+                status:'success',
+                data:{
+                    id:result[0].id,
+                    name:result[0].name,
+                    avatar:result[0].avatar
+                }
             }))
         }else{
             res.end(JSON.stringify({
@@ -20,6 +23,5 @@ const Login = function(req,res){
         }
         
     })
-    
 }
 module.exports=Login
