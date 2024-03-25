@@ -1,24 +1,6 @@
 const multiparty = require('multiparty')
 const Upload = function(req,res,connection){
     res.writeHead(200,{'content-type':'text/html;charset=UTF8'})
-    // base64传参长度太长
-    // let updateSql=`UPDATE user_info SET ? WHERE ?;`
-    // let data=[{avatar:req.body.file},{id:req.body.id}]
-    // connection.query(updateSql,data,(err,results)=>{
-    //     if(err){
-    //         res.end(JSON.stringify({
-    //             msg:err,
-    //             status:'error'
-    //         }))
-    //     }else{
-    //         res.end(JSON.stringify({
-    //             status:'success',
-    //             msg:'上传成功！',
-    //             url:req.body.file
-    //         }))
-    //     }
-    // })
-
     // formData传参
     let form = new multiparty.Form()
     form.encoding='UTF-8'

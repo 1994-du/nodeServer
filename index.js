@@ -27,6 +27,9 @@ app.all('/tologin', (req, res) => Login(req, res, connection))
 app.all('/toregistry', (req, res) => Registry(req, res, connection))
 app.all('/toupload', (req, res) => Upload(req, res, connection))
 app.all('/historyAvatar',(req,res)=>historyAvatar(req, res, connection))
+app.all('/delaytest',(req,res)=>{
+	res.send('delaytest')
+})
 var http = createServer(app)
 // var io = new Server(http,{
 //   cors:{
