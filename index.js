@@ -8,6 +8,7 @@ const Login = require('./login') // 登录
 const Registry = require('./registry') //注册
 const Upload = require('./upload')//上传
 const historyAvatar = require('./historyAvatar.js')
+const delaytest = require('./delaytest.js')
 const path = require('path')
 const connection = require('./connectionSql.js')
 connection.connect(err => {
@@ -27,9 +28,7 @@ app.all('/tologin', (req, res) => Login(req, res, connection))
 app.all('/toregistry', (req, res) => Registry(req, res, connection))
 app.all('/toupload', (req, res) => Upload(req, res, connection))
 app.all('/historyAvatar',(req,res)=>historyAvatar(req, res, connection))
-app.all('/delaytest',(req,res)=>{
-	res.send('delaytest')
-})
+app.all('/delaytest',(req,res)=>delaytest(req,res,connection))
 var http = createServer(app)
 // var io = new Server(http,{
 //   cors:{
