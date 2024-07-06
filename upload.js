@@ -8,7 +8,7 @@ const Upload = function(req,res,connection){
     form.parse(req,(err,fields,files)=>{
         let file = files.file[0]
         let url = 'http://localhost:1234/images/'+file.path.split('/')[2];
-        let updateSql=`UPDATE user_info SET ? WHERE ?;`
+        let updateSql=`UPDATE local_user SET ? WHERE ?;`
         let data=[{avatar:url},{id:fields.id}]
         connection.query(updateSql,data,(err,results)=>{
             if(err){
