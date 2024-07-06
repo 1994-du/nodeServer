@@ -7,7 +7,7 @@ const Login = function(req,res,connection){
         let result = JSON.parse(JSON.stringify(resp));
         if(result.length>0){
             res.end(JSON.stringify({
-                msg:"登录成功",
+                message:"登录成功",
                 status:'success',
                 data:{
                     id:result[0].id,
@@ -17,7 +17,7 @@ const Login = function(req,res,connection){
             }))
         }else{
             res.end(JSON.stringify({
-                msg:"账号或密码错误",
+                message:"账号或密码错误",
                 status:'error'
             }))
         }
