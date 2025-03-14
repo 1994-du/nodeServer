@@ -1,6 +1,0 @@
-import{_ as l}from"./_plugin-vue_export-helper-c27b6911.js";import{j as c,k as _,l as a,q as s,F as d,y as h,z as i,m as e,x as m}from"./index-104000c2.js";const r={},n=t=>(h("data-v-b7915050"),t=t(),i(),t),u=n(()=>e("h1",null,"nvm使用",-1)),p=n(()=>e("h4",null,[e("a",{href:"https://github.com/coreybutler/nvm-windows/releases",target:"_blank"},"下载地址"),m(" 选择下载nvm-setup.zip。 ")],-1)),v=n(()=>e("h4",null,"查看可在线安装的node版本(LTS:长期支持)",-1)),f=n(()=>e("h4",null,"安装node版本",-1)),b=n(()=>e("h4",null,"查看所有已安装的node版本",-1)),g=n(()=>e("h4",null,"切换node版本",-1)),S=n(()=>e("h4",null,"设置默认node版本",-1)),x=n(()=>e("h4",null,"卸载node版本",-1));function L(t,T){const o=c("highlightjs");return _(),a(d,null,[u,p,v,s(o,{code:"nvm list available"}),s(o,{code:`|   CURRENT    |     LTS      |  OLD STABLE  | OLD UNSTABLE |
-|--------------|--------------|--------------|--------------|
-|    19.6.0    |   18.14.0    |   0.12.18    |   0.11.16    |
-|    19.5.0    |   18.13.0    |   0.12.17    |   0.11.15    |
-|    19.4.0    |   18.12.1    |   0.12.16    |   0.11.14    |`}),f,s(o,{code:`安装指定node版本 nvm install 18.14.0 
-安装最新稳定node版本 nvm install stable`}),b,s(o,{code:"nvm list 或者 nvm ls"}),g,s(o,{code:"nvm use 18.14.0"}),S,s(o,{code:"nvm alias default"}),x,s(o,{code:"nvm uninstall 18.14.0"})],64)}const k=l(r,[["render",L],["__scopeId","data-v-b7915050"]]);export{k as default};
