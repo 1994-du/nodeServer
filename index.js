@@ -17,6 +17,7 @@ const cors = require('cors') // 引入 cors 包
 connection.connect(err => {
 	if (err) throw err;
 	console.log("Connected to the MySQL server!")
+	mysql2= connection;
 })
 
 const indexHtml = fs.readFileSync(require.resolve('./index.html'), { encoding: 'utf8' })
@@ -43,7 +44,7 @@ var http = createServer(app)
 //     methods:['get','post']
 //   }
 // })
-// io.on('connection',(socket)=>{
+// io.on('pool',(socket)=>{
 //   socket.on('send-message',(data)=>{
 //     socket.broadcast.emit('msg_res',data)
 //   })
