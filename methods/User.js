@@ -7,11 +7,6 @@ const getUsers = function(req,res,connection){
                 msg:'获取所有用户失败'
             })
         }else{
-            // res.send({
-            //     code:200,
-            //     msg:'获取所有用户成功',
-            //     data:users
-            // })
             const userIds = users.map(user => user.roleId);
             const queryRolesSql = 'SELECT * FROM role WHERE roleId IN (?)';
             connection.query(queryRolesSql,[userIds],(err,roles)=>{
