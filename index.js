@@ -1,6 +1,7 @@
 var express = require('express'); // 引入express
 var bodyParser = require('body-parser'); // 解析请求体
 var multer = require('multer'); // 处理文件上传
+const upload = multer(); // 内存存储（不保存到磁盘）
 var cors = require('cors'); // 处理跨域
 var fs = require('fs'); // 文件系统交互
 var path = require('path'); // 路径
@@ -9,7 +10,7 @@ const connection = require('./connectionSql'); // 数据库连接
 var Register = require('./methods/Register'); // 注册
 var Login = require('./methods/Login'); // 登录
 var { getUsers } = require('./methods/User'); // 用户
-var { getRoles } = require('./methods/Role'); // 角色
+var { getRoles, setRoles } = require('./methods/Role'); // 角色
 var { CommonDownloadFile,FragmentDownloadFile } = require('./methods/DownloadFile'); // 文件下载
 var { CommonUploadFile,FragmentUploadFile } = require('./methods/UploadFile'); // 文件上传
 
@@ -23,11 +24,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.post('/register',(req,res)=>Register(req,res,connection))
 app.post('/login',(req,res)=>Login(req,res,connection))
 app.get('/getUsers',(req,res)=>getUsers(req,res,connection))
-app.get('/getRoles',(req,res)=>getRoles(req,res,connection))
+app.post('/getRoles',(req,res)=>getRoles(req,res,connection))
+app.post('/setRoles',(req,res)=>setRoles(req,res,connection))
 app.post('/commonDownload', (req, res) =>CommonDownloadFile(req, res, connection))
 app.post('/fragmentDownload', (req, res) =>FragmentDownloadFile(req, res, connection))
 app.post('/commonUpload', (req, res) =>CommonUploadFile(req, res, connection))
-app.post('/fragmentUpload', (req, res) =>FragmentUploadFile(req, res, connection))
+app.post('/fragmentUpload',upload.single("file"),(req, res) =>FragmentUploadFile(req, res, connection))
 
 
 
