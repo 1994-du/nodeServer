@@ -13,6 +13,7 @@ var { getUsers } = require('./methods/User'); // 用户
 var { getRoles, setRoles } = require('./methods/Role'); // 角色
 var { CommonDownloadFile,FragmentDownloadFile } = require('./methods/DownloadFile'); // 文件下载
 var { CommonUploadFile,FragmentUploadFile } = require('./methods/UploadFile'); // 文件上传
+var ConnectWebSocket = require('./methods/WebSocket'); // WebSocket
 
 var app = express();
 var PORT = 1234;
@@ -20,6 +21,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 app.post('/register',(req,res)=>Register(req,res,connection))
 app.post('/login',(req,res)=>Login(req,res,connection))
@@ -33,16 +36,27 @@ app.post('/fragmentUpload',upload.single("file"),(req, res) =>FragmentUploadFile
 
 
 
+// 创建一个 HTTP 服务器
+const server = require('http').createServer(app);
+// 创建一个 WebSocket 服务器
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ server });
+ConnectWebSocket(WebSocket,wss);
 
 
-
-
-
-
-
-
-
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT}`);
+// 启动服务器
+server.listen(PORT, () => {
+    console.log(`Server is running on port http://localhost:${PORT}`);
 });
+
+
+
+
+
+
+
+
+
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port http://localhost:${PORT}`);
+// });
