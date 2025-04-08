@@ -1,8 +1,35 @@
 const fs = require('fs');
 const path = require('path');
+const getLocalIP = require('../getLocalIp.js');
+const localIp = getLocalIP();
 
 const CommonUploadFile = function(req, res, connection) {
+    console.log('本地IP地址:', localIp);
+    try {
+        console.log('📂 正在接收普通文件:', req.file);
+        const { originalname } = req.file;
 
+        
+        // ✅ 文件读取路径
+        const reqFilePath = path.join('file', originalname);
+        const filePath = `http://${localIp}:1234/${reqFilePath}`;
+        // ✅ 文件存储路径
+        const localFilePath = path.join('public', 'file', originalname);
+        // 保存文件到本地
+        const localFullPath = path.join(__dirname, '../', localFilePath);
+        fs.writeFileSync(localFullPath, req.file.buffer);
+
+        console.log(`✅ 文件 ${originalname} 已保存`);
+
+        res.status(200).send({
+            status: 200,
+            message: `文件 ${originalname} 上传成功！`,
+            filePath: filePath
+        });
+    } catch (err) {
+        console.error("❌ 处理普通文件上传时发生错误:", err);
+        res.status(500).send({ message: 'Error processing normal file upload.' });
+    }
 }
 
 const FragmentUploadFile = function(req, res) {

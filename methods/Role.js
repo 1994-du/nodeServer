@@ -26,7 +26,23 @@ const getRoles = function(req, res, connection) {
         });
     });
 }
-
+const getRoleDict = function(req, res, connection) {
+    let sql = `select * from role`;
+    connection.query(sql, (err, resp, fields) => {
+        if (err) throw err;
+        let roleDict = resp.map((item)=>{
+            return {
+                label:item.roleName,
+                value:item.roleId
+            }
+        })
+        res.status(200).send({
+            status: 200,
+            message: '获取角色字典成功',
+            data: roleDict
+        });
+    })
+}
 // 修改: 将 createRole 函数改为更新角色的 SQL 语句
 const setRoles = function(req, res, connection) {
     const { roleId, roleName, roleDesc, menus, checked } = req.body;
@@ -65,5 +81,6 @@ const setRoles = function(req, res, connection) {
 
 module.exports = {
     getRoles,
-    setRoles // 新增: 导出 createRole 函数
+    setRoles, // 新增: 导出 createRole 函数
+    getRoleDict
 }
