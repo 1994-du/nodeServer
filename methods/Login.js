@@ -31,6 +31,7 @@ const Login = function(req,res,connection){
             const menuData = menuResp.length > 0 ? menuResp[0].menus : null;
             // 返回登录成功信息和菜单数据
             res.status(200).send({
+                status: 200,
                 message: '登录成功',
                 user,
                 menus: menuData

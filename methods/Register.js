@@ -10,6 +10,7 @@ const Register = function (req,res,connection) {
         if(err) {
             if(err.code === 'ER_DUP_ENTRY'){
                 return res.status(400).send({
+                    status:400,
                     message:'用户名已存在'
                 })
             }

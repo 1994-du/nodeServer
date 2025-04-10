@@ -88,8 +88,68 @@ const setUser = function(req, res, connection) {
         })
     })
 }
+function getRandom7DigitsLoop() {
+    let result = '';
+    for (let i = 0; i < 7; i++) {
+        // 生成 0 到 9 之间的随机整数
+        const digit = Math.floor(Math.random() * 10);
+        result += digit;
+    }
+    return result;
+}
+
+const random7DigitsLoop = getRandom7DigitsLoop();
+
+const addUser = function(req, res, connection) {
+    const { username, roleId, avatar } = req.body;
+    if (!username) {
+        return res.status(400).send({
+            message: '用户名不能为空'
+        });
+    }
+    let password = '123456'
+    let userId = random7DigitsLoop
+    let sql = `INSERT INTO user (username, userId, password, roleId, avatar) VALUES (?, ?, ?,?,?)`;
+    connection.query(sql, [username, userId, password, roleId, avatar], (err, result) => {
+        if (err) {
+            return res.status(500).send({
+                message: '服务器错误',
+                error: err
+            });
+        }
+        res.status(200).send({
+            status: 200,
+            message: '添加用户成功',
+            data: result
+        })
+    })
+}
+const deleteUser = function(req, res, connection) {
+    const { userId } = req.body;
+    if (!userId) {
+        return res.status(400).send({
+            message: '用户ID不能为空'
+        });
+    }
+    let sql = `DELETE FROM user WHERE userId =?`;
+    connection.query(sql, [userId], (err, result) => {
+        if (err) {
+            return res.status(500).send({
+                message: '服务器错误',
+                error: err
+            });
+        }
+        res.status(200).send({
+            status: 200,
+            message: '删除用户成功',
+            data: result
+        })
+    })
+}
 module.exports = {
     getUsers,
     getUserDict,
-    setUser
+    setUser,
+    addUser,
+    deleteUser
 }
