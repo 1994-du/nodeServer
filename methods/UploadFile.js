@@ -59,47 +59,78 @@ const FragmentUploadFile = function(req, res) {
             }
         }
 
-        if (!allChunksUploaded) {
+        if (allChunksUploaded) {
+            // ✅ 合并分片文件
+            console.log(`🚀 所有分片上传完毕，开始合并 ${filename}`);
+            const finalFilePath = path.join(__dirname, '../public/file', filename);
+            const finalFileStream = fs.createWriteStream(finalFilePath);
+            let currentChunk = 1;
+
+            function appendNextChunk() {
+                if (currentChunk > totalChunks) {
+                    finalFileStream.end();
+                    return;
+                }
+                const chunkFilePath = path.join(chunkPath, `chunk_${currentChunk}`);
+                const chunkStream = fs.createReadStream(chunkFilePath);
+
+                chunkStream.pipe(finalFileStream, { end: false });
+
+                chunkStream.on('end', () => {
+                    try {
+                        // 删除已合并的分片
+                        fs.unlinkSync(chunkFilePath);
+                    } catch (unlinkErr) {
+                        console.error("❌ 删除分片文件时发生错误:", unlinkErr);
+                        finalFileStream.destroy();
+                        res.status(500).send({ message: '删除分片文件时发生错误。' });
+                        return;
+                    }
+                    currentChunk++;
+                    appendNextChunk();
+                });
+
+                chunkStream.on('error', (err) => {
+                    console.error("❌ 读取分片文件时发生错误:", err);
+                    finalFileStream.destroy();
+                    res.status(500).send({ message: '读取分片文件时发生错误。' });
+                });
+            }
+
+            appendNextChunk();
+
+            finalFileStream.on('error', (err) => {
+                console.error("❌ 合并分片文件时发生错误:", err);
+                res.status(500).send({ message: '合并分片文件时发生错误。' });
+            });
+
+            finalFileStream.on('finish', () => {
+                try {
+                    // 删除分片文件夹
+                    fs.rmdirSync(chunkPath);
+                } catch (rmdirErr) {
+                    console.error("❌ 删除分片文件夹时发生错误:", rmdirErr);
+                    res.status(500).send({ message: '删除分片文件夹时发生错误。' });
+                    return;
+                }
+                console.log(`🎉 文件 ${filename} 合并完成！`);
+                res.status(200).send({
+                    status: 200,
+                    message: `文件 ${filename} 上传成功！`,
+                    filePath: finalFilePath
+                });
+            });
+        } else {
             return res.status(200).send({ 
                 code:'chunk',
                 status: 200,
                 message: `分片 ${chunkNumber} 已上传，等待其他分片...`
             });
         }
-
-        // ✅ 合并分片文件
-        console.log(`🚀 所有分片上传完毕，开始合并 ${filename}`);
-        const finalFilePath = path.join(__dirname, '../public/file', filename);
-        
-        const finalFileStream = fs.createWriteStream(finalFilePath);
-        for (let i = 1; i <= totalChunks; i++) {
-            const chunkFilePath = path.join(chunkPath, `chunk_${i}`);
-
-            // 读取分片并同步追加到最终文件
-            const chunkData = fs.readFileSync(chunkFilePath);
-            finalFileStream.write(chunkData);
-
-            // ✅ 删除已合并的分片
-            fs.unlinkSync(chunkFilePath);
-        }
-
-        // ✅ 关闭流
-        finalFileStream.end();
-
-        // ✅ 删除分片文件夹
-        fs.rmdirSync(chunkPath);
-
-        console.log(`🎉 文件 ${filename} 合并完成！`);
-        res.status(200).send({
-            status: 200,
-            message: `文件 ${filename} 上传成功！`,
-            filePath: finalFilePath
-        });
-
-    } catch (err) {
-        console.error("❌ 处理分片上传时发生错误:", err);
-        res.status(500).send({ message: 'Error processing chunk upload.' });
-    }
+} catch (err) {
+    console.error("❌ 处理分片上传时发生错误:", err);
+    res.status(500).send({ message: '处理分片上传时发生错误。' });
+}
 };
 
 module.exports = {
