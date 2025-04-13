@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 // 分片下载
 const FragmentDownloadFile = function(req,res,connection){
+    console.log('分片下载',req.body,req.headers.range);
+    
     const filePath = path.join(__dirname,'../public/file',req.body.fileName)
     fs.stat(filePath,(err,stat)=>{
         if(err){
@@ -9,7 +11,7 @@ const FragmentDownloadFile = function(req,res,connection){
                 message:'服务器错误'
             })
         }
-        const range = req.header.range
+        const range = req.headers.range
         // 没有range请求头
         if(!range){
             CommonDownloadFile(req,res,connection)
