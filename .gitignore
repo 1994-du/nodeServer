@@ -3,3 +3,4 @@ node_modules/
 package-lock.json
 /images/
 server/node_modules/
+yarn.lock
